@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medellín · 13–20 oct 2026 — Guía de Rafy &amp; Vanessa</title>
+<meta name="description" content="Guía día por día del viaje de aniversario a Medellín: mapas, clima, restaurantes y plan nocturno.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{
+  --bg:#0a0f1e; --bg2:#0d1428; --card:#121a30; --card2:#16203a;
+  --gold:#f2b544; --gold2:#ffd97a; --green:#3ddc84; --blue:#5aa9ff;
+  --text:#eef2ff; --muted:#9aa6c7; --line:rgba(255,255,255,.09);
+  --radius:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--gold2)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+/* ---------- HERO ---------- */
+.hero{
+  position:relative;overflow:hidden;padding:88px 0 64px;
+  background:
+    radial-gradient(900px 480px at 12% -8%, rgba(242,181,68,.22), transparent 60%),
+    radial-gradient(800px 500px at 88% 10%, rgba(61,220,132,.14), transparent 60%),
+    radial-gradient(700px 600px at 50% 110%, rgba(90,169,255,.12), transparent 60%),
+    var(--bg);
+}
+.hero-kicker{display:inline-flex;align-items:center;gap:10px;font-size:13px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:18px}
+.hero-kicker::before,.hero-kicker::after{content:"";height:1px;width:34px;background:linear-gradient(90deg,transparent,var(--gold))}
+.hero-kicker::after{background:linear-gradient(90deg,var(--gold),transparent)}
+.hero h1{font-size:clamp(40px,7vw,76px);font-weight:800;line-height:1.02;letter-spacing:-1.5px;margin-bottom:14px}
+.hero h1 .accent{background:linear-gradient(92deg,var(--gold2),var(--gold) 55%,#ff9d5c);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{font-size:clamp(16px,2.4vw,20px);color:var(--muted);max-width:640px;margin-bottom:30px}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:999px;
+  padding:9px 16px;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:8px;backdrop-filter:blur(6px)}
+.chip b{color:var(--gold2)}
+/* ---------- NAV ---------- */
+.daynav{position:sticky;top:0;z-index:50;background:rgba(10,15,30,.88);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line)}
+.daynav .wrap{display:flex;gap:8px;overflow-x:auto;padding:12px 20px;scrollbar-width:none}
+.daynav .wrap::-webkit-scrollbar{display:none}
+.daynav a{flex:0 0 auto;text-decoration:none;color:var(--muted);font-weight:700;font-size:13px;
+  padding:9px 15px;border-radius:999px;border:1px solid var(--line);transition:.2s;white-space:nowrap}
+.daynav a:hover{color:var(--text);border-color:var(--gold)}
+.daynav a.hot{background:var(--gold);color:#1a1206;border-color:var(--gold)}
+/* ---------- SECTIONS ---------- */
+section.block{padding:56px 0}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+.sec-head h2{font-size:clamp(24px,4vw,34px);font-weight:800;letter-spacing:-.5px}
+.sec-head .num{font-size:13px;font-weight:800;color:#1a1206;background:var(--gold);
+  width:30px;height:30px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+.sec-sub{color:var(--muted);margin-bottom:28px;max-width:720px}
+/* ---------- WEATHER ---------- */
+.wx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:12px}
+.wx-card{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid var(--line);
+  border-radius:16px;padding:16px 14px;text-align:center;transition:transform .2s}
+.wx-card:hover{transform:translateY(-3px);border-color:rgba(242,181,68,.4)}
+.wx-card .d{font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)}
+.wx-card .date{font-size:12px;color:var(--muted);margin-bottom:8px}
+.wx-card .t{font-size:26px;font-weight:800}
+.wx-card .t small{font-size:14px;color:var(--muted);font-weight:600}
+.wx-card .r{font-size:13px;color:var(--blue);font-weight:700;margin-top:6px}
+.wx-card .n{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.4}
+.wx-note{margin-top:14px;font-size:13px;color:var(--muted);background:rgba(90,169,255,.08);
+  border:1px solid rgba(90,169,255,.25);border-radius:12px;padding:12px 16px}
+/* ---------- DAY CARDS ---------- */
+.day{background:linear-gradient(170deg,var(--card),var(--bg2));border:1px solid var(--line);
+  border-radius:var(--radius);margin-bottom:28px;overflow:hidden}
+.day-head{padding:26px 28px 0;display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+.day-date{font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.day-head h3{font-size:clamp(22px,3.4vw,30px);font-weight:800;letter-spacing:-.5px;width:100%}
+.day-meta{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-top:2px}
+.tag{font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.06);
+  border:1px solid var(--line);color:var(--muted)}
+.tag.sun{color:var(--gold2);border-color:rgba(242,181,68,.35);background:rgba(242,181,68,.08)}
+.tag.wx{color:var(--blue);border-color:rgba(90,169,255,.3);background:rgba(90,169,255,.08)}
+.day-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:20px}
+@media(max-width:860px){.day-grid{grid-template-columns:1fr}}
+.day-plan{padding:8px 28px 28px}
+.tl{position:relative;padding-left:26px;margin-top:14px}
+.tl::before{content:"";position:absolute;left:8px;top:8px;bottom:8px;width:2px;
+  background:linear-gradient(180deg,var(--gold),rgba(242,181,68,.1))}
+.tl-item{position:relative;padding:0 0 20px}
+.tl-item:last-child{padding-bottom:4px}
+.tl-item::before{content:"";position:absolute;left:-24px;top:6px;width:12px;height:12px;border-radius:50%;
+  background:var(--bg);border:3px solid var(--gold)}
+.tl-time{font-size:12px;font-weight:800;letter-spacing:1px;color:var(--gold2);text-transform:uppercase}
+.tl-item h4{font-size:16.5px;font-weight:700;margin:2px 0 4px}
+.tl-item p{font-size:14.5px;color:var(--muted)}
+.tl-item p b{color:var(--text)}
+.mi{display:inline-block;font-size:11.5px;font-weight:800;color:var(--green);background:rgba(61,220,132,.1);
+  border:1px solid rgba(61,220,132,.3);border-radius:999px;padding:2px 10px;margin-top:6px}
+/* night / restaurant */
+.night{margin:0 28px 28px;background:linear-gradient(150deg,rgba(242,181,68,.1),rgba(242,181,68,.03));
+  border:1px solid rgba(242,181,68,.35);border-radius:16px;padding:20px 22px;position:relative;overflow:hidden}
+.night .lbl{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.night h4{font-size:19px;font-weight:800;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.rank{font-size:12px;font-weight:800;background:var(--gold);color:#1a1206;border-radius:999px;padding:4px 12px;letter-spacing:.5px}
+.rank.star{background:linear-gradient(92deg,#ff5d7a,#ff9d5c);color:#fff}
+.night p{font-size:14.5px;color:var(--muted);margin-top:8px}
+.night p b{color:var(--text)}
+/* map */
+.mapbox{position:relative;min-height:340px;background:#0e1526}
+.mapbox .leaflet-container{position:absolute;inset:0;border-radius:0;font-family:inherit}
+.map-cap{position:absolute;left:12px;bottom:12px;z-index:500;background:rgba(10,15,30,.85);backdrop-filter:blur(6px);
+  border:1px solid var(--line);border-radius:10px;padding:7px 12px;font-size:12px;color:var(--muted)}
+.map-cap b{color:var(--gold2)}
+@media(max-width:860px){.mapbox{min-height:300px}}
+.hotel-pin{background:var(--gold);color:#1a1206;font-weight:800;font-size:13px;border-radius:50%;
+  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+  border:3px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.5)}
+.stop-pin{background:#1c2742;color:#fff;font-weight:800;font-size:13px;border-radius:50%;
+  width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--gold);box-shadow:0 2px 10px rgba(0,0,0,.5)}
+.leaflet-popup-content-wrapper{background:#141c33;color:var(--text);border-radius:12px;border:1px solid var(--line)}
+.leaflet-popup-content{font-family:inherit;font-size:13px;line-height:1.5;margin:12px 14px}
+.leaflet-popup-content b{color:var(--gold2)}
+.leaflet-popup-tip{background:#141c33;border:1px solid var(--line)}
+/* ---------- RESTAURANTS ---------- */
+.resto-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.resto{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid var(--line);
+  border-radius:16px;padding:20px;position:relative;transition:transform .2s}
+.resto:hover{transform:translateY(-3px)}
+.resto.top{border-color:rgba(242,181,68,.5)}
+.resto h4{font-size:17px;font-weight:800;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.resto .zone{font-size:12.5px;color:var(--muted);font-weight:600;margin:4px 0 8px}
+.resto p{font-size:14px;color:var(--muted)}
+.resto .rate{margin-top:10px;font-size:13px;font-weight:700;color:var(--gold2)}
+.resto .night-use{margin-top:8px;font-size:13px;color:var(--green);font-weight:700}
+/* ---------- EVENTS / PRACTICAL ---------- */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.panel{background:linear-gradient(160deg,var(--card),var(--bg2));border:1px solid var(--line);
+  border-radius:16px;padding:22px}
+.panel h4{font-size:16px;font-weight:800;margin-bottom:10px;display:flex;gap:10px;align-items:center}
+.panel ul{list-style:none}
+.panel li{font-size:14px;color:var(--muted);padding:8px 0 8px 26px;position:relative;border-bottom:1px dashed rgba(255,255,255,.07)}
+.panel li:last-child{border-bottom:none}
+.panel li::before{content:"✓";position:absolute;left:2px;color:var(--green);font-weight:800}
+.panel li b{color:var(--text)}
+.event{border-left:3px solid var(--gold);padding:4px 0 4px 14px;margin-bottom:14px}
+.event:last-child{margin-bottom:0}
+.event h5{font-size:15px;font-weight:800}
+.event p{font-size:13.5px;color:var(--muted)}
+.event .when{font-size:12px;font-weight:800;color:var(--gold2);letter-spacing:.5px}
+/* ---------- FOOTER ---------- */
+footer{border-top:1px solid var(--line);padding:36px 0 60px;color:var(--muted);font-size:13px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center}
+.sig{font-weight:800;color:var(--gold2)}
+.backtop{position:fixed;right:18px;bottom:18px;z-index:60;width:46px;height:46px;border-radius:50%;
+  background:var(--gold);color:#1a1206;border:none;font-size:20px;font-weight:800;cursor:pointer;
+  box-shadow:0 6px 20px rgba(0,0,0,.4);display:none}
+.backtop.show{display:block}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-kicker">Viaje de aniversario</div>
+    <h1>Medellín <span class="accent">13–20 · oct 2026</span></h1>
+    <p class="sub">Una semana para disfrutar sin prisa. Guía día por día para <b>Rafy &amp; Vanessa</b>: un mapa por día con cada lugar ubicado respecto al hotel, clima histórico, y cada noche el restaurante que toca según su ranking.</p>
+    <div class="chips">
+      <span class="chip">🏨 <b>Hampton by Hilton</b>&nbsp;Medellín · El Poblado</span>
+      <span class="chip">📍 Calle 6 Sur #42-14</span>
+      <span class="chip">💛 Aniversario · <b>viernes 16</b></span>
+      <span class="chip">🌡️ Promedios en °F · 📏 distancias en millas</span>
+    </div>
+  </div>
+</header>
+
+<nav class="daynav"><div class="wrap" id="daynav"></div></nav>
+
+<section class="block" id="clima">
+  <div class="wrap">
+    <div class="sec-head"><span class="num">1</span><h2>Clima día por día</h2></div>
+    <p class="sec-sub">Promedios históricos de octubre en Medellín (la “ciudad de la eterna primavera”). Octubre es el mes más lluvioso: lluvias casi siempre en la tarde, mañanas aprovechables.</p>
+    <div class="wx-grid" id="wxgrid"></div>
+    <div class="wx-note">📊 Datos basados en promedios históricos de octubre (máx ~72–77 °F / mín ~48–54 °F, ~21 días de lluvia al mes, humedad ~88%). No es pronóstico: <b>vuelvan a revisar el pronóstico 7 días antes del viaje</b>, sobre todo para los miradores al atardecer.</div>
+  </div>
+</section>
+
+<section class="block" id="itinerario" style="padding-top:8px">
+  <div class="wrap">
+    <div class="sec-head"><span class="num">2</span><h2>El plan, día por día</h2></div>
+    <p class="sec-sub">Cada día trae su mapa: 🏨 es el hotel y los puntos numerados son las paradas, con la distancia en millas desde el hotel. Atardecer ≈ 5:45–5:48 PM toda la semana — para miradores, salir 45–60 min antes.</p>
+    <div id="days"></div>
+  </div>
+</section>
+
+<section class="block" id="restaurantes" style="padding-top:8px">
+  <div class="wrap">
+    <div class="sec-head"><span class="num">3</span><h2>Restaurantes, por ranking</h2></div>
+    <p class="sec-sub">La selección de la guía, ordenada por ranking. Cada noche de la semana tiene asignado uno — míralo también en la tarjeta dorada de cada día.</p>
+    <div class="resto-grid" id="restogrid"></div>
+  </div>
+</section>
+
+<section class="block" id="eventos" style="padding-top:8px">
+  <div class="wrap">
+    <div class="sec-head"><span class="num">4</span><h2>Eventos que coinciden</h2></div>
+    <p class="sec-sub">Agenda verificada al 10 de septiembre de 2026. La cartelera puede cambiar: reconfirmar 7–10 días antes.</p>
+    <div class="cols">
+      <div class="panel">
+        <h4>🎭 Cultura y ciudad</h4>
+        <div class="event">
+          <div class="when">11 SEP – 20 OCT · TODA LA SEMANA</div>
+          <h5>Fiesta del Libro y la Cultura</h5>
+          <p>El gran evento cultural de la ciudad coincide con todo el viaje. Ideal para una mañana tranquila.</p>
+        </div>
+        <div class="event">
+          <div class="when">DOM 18 OCT · 3:00–5:00 PM</div>
+          <h5>Ponte Salsa en Familia</h5>
+          <p>Claustro Comfama, Patio Teatro. Orquesta Idiosincrasia en vivo. Entrada gratuita con inscripción previa, sujeta a aforo.</p>
+        </div>
+        <div class="event">
+          <div class="when">15 – 25 OCT</div>
+          <h5>Fantasmagoría · cine fantástico</h5>
+          <p>Festival de cine fantástico durante el viaje, por si buscan un plan nocturno alternativo.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <h4>🧳 Logística que sí importa</h4>
+        <ul>
+          <li><b>Reservas primero:</b> Andrés (vie 16), Carmen (mié 14) y OCI.mde (jue 15). Los miradores no necesitan reserva, pero sí confirmar clima.</li>
+          <li><b>Uber:</b> pedirlo solo en la app, verificar placa/foto/nombre, activar PIN y compartir el viaje. Esperar dentro del hotel o restaurante.</li>
+          <li><b>Comuna 13 y Guatapé:</b> operador con Registro Nacional de Turismo y recogida puerta a puerta en el hotel.</li>
+          <li><b>Equipo de foto:</b> pocket camera como principal de noche; la 360 como complemento. Discreción en traslados.</li>
+          <li><b>Empaque:</b> paraguas o capa liviana todos los días y zapatos antideslizantes. Octubre = lluvia de tarde casi segura.</li>
+          <li><b>Emergencias:</b> 123. En Provenza/Lleras, calles principales iluminadas y nada de exhibir teléfono o joyas.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="sig">Rafy &amp; Vanessa · Medellín · octubre 2026 💛</div>
+      <div style="margin-top:6px">Temperaturas en °F · distancias en millas (línea recta; por carretera puede ser más) · ratings de Google dinámicos.</div>
+    </div>
+    <div>Hecha con mapas de © OpenStreetMap · Leaflet</div>
+  </div>
+</footer>
+<button class="backtop" id="backtop" aria-label="Volver arriba">↑</button>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const HOTEL = {lat: 6.2005, lon: -75.57333, name: "Hampton by Hilton Medellín", addr: "Calle 6 Sur #42-14 · El Poblado"};
+
+const DAYS = [
+{
+  id: "d13", dow: "MAR", date: "13 oct", title: "Llegada y adaptación", rhythm: "Ritmo ligero",
+  hi: 73, lo: 54, rain: 65, wxnote: "Llovizna ligera en la tarde", sunset: "5:48 PM",
+  stops: [
+    {time: "Tarde", name: "Check-in en el Hampton", lat: 6.2005, lon: -75.57333, mi: "0.0",
+     desc: "Registro, almuerzo ligero y descanso del vuelo. No comprometer boletos si el vuelo llega tarde."},
+    {time: "4:30 PM", name: "Milla de Oro", desc: "Paseo suave por Santa Fe o Río Sur para ubicarse: cafés, tiendas y ambiente, todo a pasos del hotel."}
+  ],
+  night: {rank: "#3", name: "La Provincia", zone: "Milla de Oro", profile: "Mediterránea / internacional",
+    rating: "4.7 · 1,600+ reseñas", addr: "Milla de Oro, El Poblado",
+    desc: "Cena temprana cerca del hotel para terminar el día descansados. La gran opción junto a la base."}
+},
+{
+  id: "d14", dow: "MIÉ", date: "14 oct", title: "Botero y noche en Provenza", rhythm: "Ritmo moderado",
+  hi: 77, lo: 50, rain: 70, wxnote: "Lluvia con tormenta posible en la tarde", sunset: "5:48 PM",
+  stops: [
+    {time: "9:30 AM", name: "Museo de Antioquia + Plaza Botero", lat: 6.25241, lon: -75.56897, mi: "3.6",
+     desc: "Visita guiada 10:00 AM–12:30 PM. Salir en transporte reservado. <b>Visitar el sector solo de día</b>; nada de exhibir teléfono o cámaras."},
+    {time: "1:00 PM", name: "Almuerzo + pausa en el hotel", lat: 6.2005, lon: -75.57333, mi: "0.0",
+     desc: "Regreso al Hampton a descansar antes de la noche larga."},
+    {time: "6:00 PM", name: "Provenza al caer la noche", lat: 6.20817, lon: -75.56633, mi: "0.7",
+     desc: "Llegada en Uber. Caminata por calles principales iluminadas, Vía Primavera y el ambiente nocturno."}
+  ],
+  night: {rank: "#1", name: "Carmen", zone: "Provenza", profile: "Colombiana contemporánea / autor",
+    rating: "4.5 · 2,700+ reseñas", addr: "Cra. 36 #10A-27", pin: {lat: 6.20994, lon: -75.56566, mi: "0.8"},
+    desc: "La cena gastronómica que priorizaría en todo el viaje. Reserva 7:30–8:00 PM. Regreso en Uber desde la puerta del restaurante."}
+},
+{
+  id: "d15", dow: "JUE", date: "15 oct", title: "El Castillo y atardecer en Las Palmas", rhythm: "Ritmo ligero",
+  hi: 73, lo: 50, rain: 70, wxnote: "Chubascos ligeros en la tarde", sunset: "5:47 PM",
+  stops: [
+    {time: "10:00 AM", name: "Museo El Castillo", lat: 6.19027, lon: -75.56954, mi: "0.8",
+     desc: "Jardines y recorrido guiado 10:00 AM–12:30 PM. La atracción más cómoda y cercana al hotel."},
+    {time: "4:15 PM", name: "Second Mirador de Las Palmas", lat: 6.18995, lon: -75.54745, mi: "1.9",
+     desc: "La panorámica clásica del Valle de Aburrá. Llegar con luz para el cambio de <b>golden hour a blue hour</b>. Llevar capa: el mirador depende del clima."}
+  ],
+  night: {rank: "#2", name: "OCI.mde", zone: "El Poblado", profile: "Fine dining / cocciones lentas",
+    rating: "4.6 · 1,900+ reseñas", addr: "Cra. 33 #7-21", pin: {lat: 6.20672, lon: -75.56461, mi: "0.7"},
+    desc: "Excelente si el foco es la cocina y no el show. Reserva ~7:30 PM al bajar del mirador."},
+  alt: "Alternativa de mirador: <b>La Octava Maravilla</b> en Sabaneta (4.5 mi) — ir por la vista y las fotos al atardecer, no como cena principal."
+},
+{
+  id: "d16", dow: "VIE", date: "16 oct", title: "Arte y aniversario 💛", rhythm: "Ritmo ligero · día especial",
+  hi: 73, lo: 50, rain: 65, wxnote: "Chubascos ligeros", sunset: "5:47 PM",
+  stops: [
+    {time: "11:00 AM", name: "MAMM · Museo de Arte Moderno", lat: 6.2237, lon: -75.57445, mi: "1.6",
+     desc: "Visita 11:00 AM–1:30 PM y almuerzo después en Ciudad del Río. Tarde completa de descanso en el hotel."}
+  ],
+  night: {rank: "★", star: true, name: "Andrés Carne de Res Medellín", zone: "El Poblado · Río Sur",
+    profile: "Fiesta colombiana / cena show", rating: "La experiencia festiva del viaje", addr: "Junto al hotel",
+    pin: {lat: 6.19873, lon: -75.57394, mi: "0.1"},
+    desc: "Cena de aniversario 7:00–7:30 PM. Anotar la celebración en la reserva; mesa sentada, alejada de parlantes (el viernes sube el ruido más tarde). Si llueve o terminan tarde, pedir el transporte dentro del restaurante."}
+},
+{
+  id: "d17", dow: "SÁB", date: "17 oct", title: "Comuna 13", rhythm: "Ritmo moderado",
+  hi: 72, lo: 50, rain: 70, wxnote: "Chubascos ligeros", sunset: "5:46 PM",
+  stops: [
+    {time: "8:30 AM", name: "Comuna 13 · recorrido privado", lat: 6.24837, lon: -75.62173, mi: "4.7",
+     desc: "Recogida en el hotel 8:30 AM. Ruta de 2–3 h usando las <b>escaleras eléctricas</b>; terminar antes del mediodía, antes de la mayor concentración de visitantes. Operador legal con guía privado. Si hay molestias de rodillas o equilibrio: cambiar por Pueblito Paisa."},
+    {time: "Mediodía", name: "Almuerzo + descanso largo", lat: 6.2005, lon: -75.57333, mi: "0.0",
+     desc: "Tarde libre en el hotel para reponer energías antes de la noche."}
+  ],
+  night: {rank: "#5", name: "La Matriarca", zone: "El Poblado", profile: "Colombiana / antioqueña",
+    rating: "4.7 · 10,000+ reseñas", addr: "El Poblado",
+    desc: "Sabores colombianos reconocibles. Reserva ~8:00 PM. Uber puerta a puerta por ser sábado."}
+},
+{
+  id: "d18", dow: "DOM", date: "18 oct", title: "Las mejores atracciones", rhythm: "Ritmo moderado",
+  hi: 73, lo: 50, rain: 60, wxnote: "Chubascos ligeros", sunset: "5:46 PM",
+  stops: [
+    {time: "9:30 AM", name: "Pueblito Paisa · Cerro Nutibara", lat: 6.23529, lon: -75.57995, mi: "2.4",
+     desc: "El pueblito antioqueño en la cima + mirador 360° de la ciudad. Mañana de fotos."},
+    {time: "2:00 PM", name: "Jardín Botánico", lat: 6.27095, lon: -75.56452, mi: "4.9",
+     desc: "Orquideorama y senderos tranquilos. Entrada general suele ser gratuita. Alternativa: <b>Ponte Salsa en Familia</b> 3:00–5:00 PM en el Claustro Comfama (gratis con inscripción previa)."}
+  ],
+  night: {rank: "#4", name: "Sambombi Bistro Local", zone: "Provenza", profile: "Bistró creativo / producto local",
+    rating: "4.5 · 600+ reseñas", addr: "Cra. 35 #7-10", pin: {lat: 6.20628, lon: -75.56536, mi: "0.7"},
+    desc: "Íntimo y casual. Reserva 7:30 PM para cerrar el domingo; paseo corto por Provenza después."}
+},
+{
+  id: "d19", dow: "LUN", date: "19 oct", title: "Guatapé sin prisa", rhythm: "Día largo",
+  hi: 75, lo: 48, rain: 65, wxnote: "Tormenta posible en la tarde", sunset: "5:45 PM",
+  stops: [
+    {time: "7:00 AM", name: "Guatapé · día completo", lat: 6.23371, lon: -75.16008, mi: "28.5",
+     desc: "Excursión privada de 10–11 h: pueblo y zócalos, malecón, almuerzo tranquilo y paseo corto en lancha (solo con chalecos y embarque estable). La subida a la <b>Piedra del Peñol</b> (740 escalones, 27.1 mi) solo si ambos la desean y el clima está seco."},
+    {time: "6:30 PM", name: "Regreso a Medellín", lat: 6.2005, lon: -75.57333, mi: "0.0",
+     desc: "Llevar agua, capa liviana y medicamentos en el bolso de mano. Noche de descanso: sin espectáculos."}
+  ],
+  night: {rank: "#6", name: "Belisario", zone: "Provenza", profile: "Cena + ambiente nocturno",
+    rating: "4.8 · 9,000+ reseñas", addr: "Provenza, El Poblado",
+    desc: "Cena ligera tras el día largo. Ideal para cenar y salir caminando por Provenza sin mover el carro."}
+},
+{
+  id: "d20", dow: "MAR", date: "20 oct", title: "Despedida sin carreras", rhythm: "Ritmo ligero",
+  hi: 70, lo: 50, rain: 65, wxnote: "Chubascos ligeros", sunset: "5:45 PM",
+  stops: [
+    {time: "Mañana", name: "Desayuno + check-out", lat: 6.2005, lon: -75.57333, mi: "0.0",
+     desc: "Compras de última hora en Santa Fe si el horario del vuelo lo permite. No reservar atracciones con boleto este día."},
+    {time: "Tarde", name: "Traslado al aeropuerto", desc: "Para un vuelo internacional, confirmar con el hotel la hora de salida tomando en cuenta el tráfico hacia el aeropuerto (1 h o más)."}
+  ],
+  night: {none: true, text: "Noche: vuelo de regreso. Solo si duermen en Medellín esa noche: <b>Mandrágora Teatro</b> a las 7:00 PM en el Teatro Pablo Tobón Uribe (3.4 mi del hotel)."}
+}
+];
+
+const RESTOS = [
+  {rank: "#1", name: "Carmen", zone: "Provenza", profile: "Colombiana contemporánea / autor", rating: "4.5 · 2,700+ reseñas", addr: "Cra. 36 #10A-27", night: "Miércoles 14 · noche en Provenza"},
+  {rank: "#2", name: "OCI.mde", zone: "El Poblado", profile: "Fine dining / cocciones lentas", rating: "4.6 · 1,900+ reseñas", addr: "Cra. 33 #7-21", night: "Jueves 15 · tras el mirador"},
+  {rank: "#3", name: "La Provincia", zone: "Milla de Oro", profile: "Mediterránea / internacional", rating: "4.7 · 1,600+ reseñas", addr: "Milla de Oro, El Poblado", night: "Martes 13 · junto al hotel"},
+  {rank: "#4", name: "Sambombi Bistro Local", zone: "Provenza", profile: "Bistró creativo / producto local", rating: "4.5 · 600+ reseñas", addr: "Cra. 35 #7-10", night: "Domingo 18 · cierre del domingo"},
+  {rank: "#5", name: "La Matriarca", zone: "El Poblado", profile: "Colombiana / antioqueña", rating: "4.7 · 10,000+ reseñas", addr: "El Poblado", night: "Sábado 17 · tras Comuna 13"},
+  {rank: "#6", name: "Belisario", zone: "Provenza", profile: "Cena + ambiente nocturno", rating: "4.8 · 9,000+ reseñas", addr: "Provenza, El Poblado", night: "Lunes 19 · tras Guatapé"},
+  {rank: "★", star: true, name: "Andrés Carne de Res Medellín", zone: "El Poblado · Río Sur", profile: "Fiesta colombiana / cena show", rating: "La experiencia festiva", addr: "Junto al hotel · 0.1 mi", night: "Viernes 16 · aniversario 💛"}
+];
+
+/* ---------- NAV ---------- */
+(function(){
+  const nav = document.getElementById("daynav");
+  let html = '<a href="#clima">🌡️ Clima</a>';
+  DAYS.forEach(d => { html += '<a href="#' + d.id + '">' + d.dow + " " + d.date + "</a>"; });
+  html += '<a href="#restaurantes">🍽️ Restaurantes</a><a href="#eventos">🎭 Eventos</a>';
+  nav.innerHTML = html;
+})();
+
+/* ---------- WEATHER ---------- */
+(function(){
+  const g = document.getElementById("wxgrid");
+  g.innerHTML = DAYS.map(d =>
+    '<div class="wx-card"><div class="d">' + d.dow + '</div><div class="date">' + d.date + '</div>' +
+    '<div class="t">' + d.hi + '°<small> / ' + d.lo + '°F</small></div>' +
+    '<div class="r">🌧️ ' + d.rain + '% lluvia</div><div class="n">' + d.wxnote + '</div></div>'
+  ).join("");
+})();
+
+/* ---------- DAYS ---------- */
+(function(){
+  const box = document.getElementById("days");
+  box.innerHTML = DAYS.map((d, i) => {
+    const tl = d.stops.map(s =>
+      '<div class="tl-item"><div class="tl-time">' + s.time + '</div><h4>' + s.name + '</h4><p>' + s.desc + '</p>' +
+      (s.mi ? '<span class="mi">📍 ' + s.mi + ' mi del hotel</span>' : "") + "</div>"
+    ).join("");
+    let night;
+    if (d.night.none) {
+      night = '<div class="night"><div class="lbl">🌙 Por la noche</div><p>' + d.night.text + "</p></div>";
+    } else {
+      const n = d.night;
+      const pinLine = n.pin ? ' <span class="mi">📍 ' + n.pin.mi + ' mi del hotel</span>' : "";
+      night = '<div class="night"><div class="lbl">🌙 Por la noche · restaurante ' + n.rank + ' del ranking</div>' +
+        '<h4><span class="rank' + (n.star ? " star" : "") + '">' + n.rank + '</span> ' + n.name + "</h4>" +
+        '<p><b>' + n.zone + "</b> · " + n.profile + " · " + n.rating + "<br>" + n.addr + pinLine + "<br>" + n.desc + "</p></div>";
+    }
+    const alt = d.alt ? '<div class="wx-note" style="margin:0 28px 28px">💡 ' + d.alt + "</div>" : "";
+    return '<article class="day" id="' + d.id + '">' +
+      '<div class="day-head"><div class="day-date">' + d.dow + " · " + d.date + " de 2026</div><h3>" + d.title + "</h3>" +
+      '<div class="day-meta"><span class="tag">' + d.rhythm + '</span>' +
+      '<span class="tag sun">🌇 Atardecer ≈ ' + d.sunset + '</span>' +
+      '<span class="tag wx">🌡️ ' + d.hi + "/" + d.lo + ' °F · 🌧️ ' + d.rain + "%</span></div></div>" +
+      '<div class="day-grid"><div class="day-plan"><div class="tl">' + tl + "</div></div>" +
+      '<div class="mapbox" data-day="' + i + '"><div class="map-cap">🗺️ <b>🏨</b> hotel · distancias en línea recta</div></div></div>' +
+      night + alt + "</article>";
+  }).join("");
+})();
+
+/* ---------- RESTAURANTS ---------- */
+(function(){
+  const g = document.getElementById("restogrid");
+  g.innerHTML = RESTOS.map(r =>
+    '<div class="resto' + (r.star ? " top" : "") + '"><h4><span class="rank' + (r.star ? " star" : "") + '">' + r.rank + "</span> " + r.name + "</h4>" +
+    '<div class="zone">' + r.zone + " · " + r.addr + "</div><p>" + r.profile + "</p>" +
+    '<div class="rate">⭐ ' + r.rating + '</div><div class="night-use">→ ' + r.night + "</div></div>"
+  ).join("");
+})();
+
+/* ---------- MAPS (lazy) ---------- */
+(function(){
+  const built = new Set();
+  function buildMap(box){
+    const i = +box.dataset.day, d = DAYS[i];
+    const el = document.createElement("div");
+    el.style.cssText = "position:absolute;inset:0";
+    box.prepend(el);
+    const map = L.map(el, {scrollWheelZoom: false}).setView([HOTEL.lat, HOTEL.lon], 13);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+    const pts = [[HOTEL.lat, HOTEL.lon]];
+    const hIcon = L.divIcon({className: "", html: '<div class="hotel-pin">H</div>', iconSize: [30, 30], iconAnchor: [15, 15]});
+    L.marker([HOTEL.lat, HOTEL.lon], {icon: hIcon})
+      .bindPopup("<b>🏨 " + HOTEL.name + "</b><br>" + HOTEL.addr + "<br>Su base toda la semana").addTo(map);
+    let n = 0;
+    const pins = [d.night.pin].filter(Boolean);
+    d.stops.concat(pins.map(p => ({name: "🍽️ " + d.night.name, lat: p.lat, lon: p.lon, mi: p.mi, time: "Noche"}))).forEach(s => {
+      if (s.lat == null) return;
+      if (Math.abs(s.lat - HOTEL.lat) < 1e-9 && Math.abs(s.lon - HOTEL.lon) < 1e-9) return;
+      n++;
+      pts.push([s.lat, s.lon]);
+      const icon = L.divIcon({className: "", html: '<div class="stop-pin">' + n + "</div>", iconSize: [28, 28], iconAnchor: [14, 14]});
+      L.marker([s.lat, s.lon], {icon})
+        .bindPopup("<b>" + s.name + "</b><br>" + (s.time ? s.time + " · " : "") + s.mi + " mi del hotel").addTo(map);
+    });
+    if (pts.length > 1) map.fitBounds(pts, {padding: [36, 36]});
+    setTimeout(() => map.invalidateSize(), 300);
+  }
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => {
+      if (e.isIntersecting && !built.has(e.target)) { built.add(e.target); buildMap(e.target); io.unobserve(e.target); }
+    });
+  }, {rootMargin: "240px"});
+  document.querySelectorAll(".mapbox").forEach(b => io.observe(b));
+})();
+
+/* ---------- BACK TO TOP ---------- */
+(function(){
+  const b = document.getElementById("backtop");
+  addEventListener("scroll", () => b.classList.toggle("show", scrollY > 900), {passive: true});
+  b.onclick = () => scrollTo({top: 0, behavior: "smooth"});
+})();
+</script>
+</body>
+</html>
