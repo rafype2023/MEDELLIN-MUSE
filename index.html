@@ -128,6 +128,21 @@ section.block{padding:56px 0}
 .leaflet-popup-content{font-family:inherit;font-size:13px;line-height:1.5;margin:12px 14px}
 .leaflet-popup-content b{color:var(--gold2)}
 .leaflet-popup-tip{background:#141c33;border:1px solid var(--line)}
+/* ---------- PHOTOS / MIRADORES ---------- */
+.stop-photos{margin:10px 0 4px}
+.stop-photos.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stop-photo{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:12px;display:block;border:1px solid var(--line)}
+.mir-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.mir-card{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid var(--line);
+  border-radius:16px;overflow:hidden;transition:transform .2s}
+.mir-card:hover{transform:translateY(-3px);border-color:rgba(242,181,68,.4)}
+.mir-card img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+.mir-body{padding:18px 20px 20px}
+.mir-body h4{font-size:18px;font-weight:800;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.mir-body .zone{font-size:12.5px;color:var(--muted);font-weight:600;margin:4px 0 8px}
+.mir-body p{font-size:14px;color:var(--muted)}
+.mir-body p b{color:var(--text)}
+.mir-tip{margin-top:10px;font-size:13px;color:var(--gold2);font-weight:600;line-height:1.5}
 /* ---------- RESTAURANTS ---------- */
 .resto-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
 .resto{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid var(--line);
@@ -206,9 +221,18 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;
   </div>
 </section>
 
+<section class="block" id="miradores" style="padding-top:8px">
+  <div class="wrap">
+    <div class="sec-head"><span class="num">4</span><h2>Miradores para el atardecer 🌇</h2></div>
+    <p class="sec-sub">Los mejores puntos para ver la puesta del sol y tomar fotos, según guías locales. El sol se pone ≈ 5:45–5:48 PM toda la semana: lleguen 45–60 minutos antes y revisen el pronóstico ese mismo día — en octubre el cielo se nubla rápido.</p>
+    <div class="mir-grid" id="mirgrid"></div>
+    <div class="wx-note">💡 También valen la pena: <b>Mirador El Cielo</b> (gastrobar nocturno, ~2.5 mi del hotel), <b>La Octava Maravilla</b> en Sabaneta (4.5 mi), <b>San Félix</b> al norte (parapente y cafés tranquilos) y los rooftops <b>360</b>, <b>Envy</b> y <b>Colosal</b> para la foto nocturna sin salir de El Poblado.</div>
+  </div>
+</section>
+
 <section class="block" id="eventos" style="padding-top:8px">
   <div class="wrap">
-    <div class="sec-head"><span class="num">4</span><h2>Eventos que coinciden</h2></div>
+    <div class="sec-head"><span class="num">5</span><h2>Eventos que coinciden</h2></div>
     <p class="sec-sub">Agenda verificada al 10 de septiembre de 2026. La cartelera puede cambiar: reconfirmar 7–10 días antes.</p>
     <div class="cols">
       <div class="panel">
@@ -249,6 +273,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;
     <div>
       <div class="sig">Rafy &amp; Vanessa · Medellín · octubre 2026 💛</div>
       <div style="margin-top:6px">Temperaturas en °F · distancias en millas (línea recta; por carretera puede ser más) · ratings de Google dinámicos.</div>
+      <div style="margin-top:6px">Fotos: Wikimedia Commons · La FM.</div>
     </div>
     <div>Hecha con mapas de © OpenStreetMap · Leaflet</div>
   </div>
@@ -276,10 +301,12 @@ const DAYS = [
   hi: 77, lo: 50, rain: 70, wxnote: "Lluvia con tormenta posible en la tarde", sunset: "5:48 PM",
   stops: [
     {time: "9:30 AM", name: "Museo de Antioquia + Plaza Botero", lat: 6.25241, lon: -75.56897, mi: "3.6",
+     photos: ["images/plaza-botero.jpg"],
      desc: "Visita guiada 10:00 AM–12:30 PM. Salir en transporte reservado. <b>Visitar el sector solo de día</b>; nada de exhibir teléfono o cámaras."},
     {time: "1:00 PM", name: "Almuerzo + pausa en el hotel", lat: 6.2005, lon: -75.57333, mi: "0.0",
      desc: "Regreso al Hampton a descansar antes de la noche larga."},
     {time: "6:00 PM", name: "Provenza al caer la noche", lat: 6.20817, lon: -75.56633, mi: "0.7",
+     photos: ["images/provenza.jpg"],
      desc: "Llegada en Uber. Caminata por calles principales iluminadas, Vía Primavera y el ambiente nocturno."}
   ],
   night: {rank: "#1", name: "Carmen", zone: "Provenza", profile: "Colombiana contemporánea / autor",
@@ -291,8 +318,10 @@ const DAYS = [
   hi: 73, lo: 50, rain: 70, wxnote: "Chubascos ligeros en la tarde", sunset: "5:47 PM",
   stops: [
     {time: "10:00 AM", name: "Museo El Castillo", lat: 6.19027, lon: -75.56954, mi: "0.8",
+     photos: ["images/museo-castillo.jpg"],
      desc: "Jardines y recorrido guiado 10:00 AM–12:30 PM. La atracción más cómoda y cercana al hotel."},
     {time: "4:15 PM", name: "Second Mirador de Las Palmas", lat: 6.18995, lon: -75.54745, mi: "1.9",
+     photos: ["images/mirador-las-palmas.jpg"],
      desc: "La panorámica clásica del Valle de Aburrá. Llegar con luz para el cambio de <b>golden hour a blue hour</b>. Llevar capa: el mirador depende del clima."}
   ],
   night: {rank: "#2", name: "OCI.mde", zone: "El Poblado", profile: "Fine dining / cocciones lentas",
@@ -305,6 +334,7 @@ const DAYS = [
   hi: 73, lo: 50, rain: 65, wxnote: "Chubascos ligeros", sunset: "5:47 PM",
   stops: [
     {time: "11:00 AM", name: "MAMM · Museo de Arte Moderno", lat: 6.2237, lon: -75.57445, mi: "1.6",
+     photos: ["images/mamm.jpg"],
      desc: "Visita 11:00 AM–1:30 PM y almuerzo después en Ciudad del Río. Tarde completa de descanso en el hotel."}
   ],
   night: {rank: "★", star: true, name: "Andrés Carne de Res Medellín", zone: "El Poblado · Río Sur",
@@ -317,6 +347,7 @@ const DAYS = [
   hi: 72, lo: 50, rain: 70, wxnote: "Chubascos ligeros", sunset: "5:46 PM",
   stops: [
     {time: "8:30 AM", name: "Comuna 13 · recorrido privado", lat: 6.24837, lon: -75.62173, mi: "4.7",
+     photos: ["images/comuna-13.jpg"],
      desc: "Recogida en el hotel 8:30 AM. Ruta de 2–3 h usando las <b>escaleras eléctricas</b>; terminar antes del mediodía, antes de la mayor concentración de visitantes. Operador legal con guía privado. Si hay molestias de rodillas o equilibrio: cambiar por Pueblito Paisa."},
     {time: "Mediodía", name: "Almuerzo + descanso largo", lat: 6.2005, lon: -75.57333, mi: "0.0",
      desc: "Tarde libre en el hotel para reponer energías antes de la noche."}
@@ -330,8 +361,10 @@ const DAYS = [
   hi: 73, lo: 50, rain: 60, wxnote: "Chubascos ligeros", sunset: "5:46 PM",
   stops: [
     {time: "9:30 AM", name: "Pueblito Paisa · Cerro Nutibara", lat: 6.23529, lon: -75.57995, mi: "2.4",
+     photos: ["images/pueblito-paisa.jpg"],
      desc: "El pueblito antioqueño en la cima + mirador 360° de la ciudad. Mañana de fotos."},
     {time: "2:00 PM", name: "Jardín Botánico", lat: 6.27095, lon: -75.56452, mi: "4.9",
+     photos: ["images/orquideorama.jpg"],
      desc: "Orquideorama y senderos tranquilos. Entrada general suele ser gratuita. Alternativa: <b>Ponte Salsa en Familia</b> 3:00–5:00 PM en el Claustro Comfama (gratis con inscripción previa)."}
   ],
   night: {rank: "#4", name: "Sambombi Bistro Local", zone: "Provenza", profile: "Bistró creativo / producto local",
@@ -343,6 +376,7 @@ const DAYS = [
   hi: 75, lo: 48, rain: 65, wxnote: "Tormenta posible en la tarde", sunset: "5:45 PM",
   stops: [
     {time: "7:00 AM", name: "Guatapé · día completo", lat: 6.23371, lon: -75.16008, mi: "28.5",
+     photos: ["images/guatape.jpg", "images/piedra-penol.jpg"],
      desc: "Excursión privada de 10–11 h: pueblo y zócalos, malecón, almuerzo tranquilo y paseo corto en lancha (solo con chalecos y embarque estable). La subida a la <b>Piedra del Peñol</b> (740 escalones, 27.1 mi) solo si ambos la desean y el clima está seco."},
     {time: "6:30 PM", name: "Regreso a Medellín", lat: 6.2005, lon: -75.57333, mi: "0.0",
      desc: "Llevar agua, capa liviana y medicamentos en el bolso de mano. Noche de descanso: sin espectáculos."}
@@ -373,12 +407,27 @@ const RESTOS = [
   {rank: "★", star: true, name: "Andrés Carne de Res Medellín", zone: "El Poblado · Río Sur", profile: "Fiesta colombiana / cena show", rating: "La experiencia festiva", addr: "Junto al hotel · 0.1 mi", night: "Viernes 16 · aniversario 💛"}
 ];
 
+const MIRADORES = [
+  {rank: "#1", name: "Mirador de Las Palmas", zone: "Vía Las Palmas · oriente", mi: "1.9 mi del hotel",
+   img: "images/mirador-las-palmas.jpg",
+   desc: "El clásico que nunca falla: la panorámica más amplia del Valle de Aburrá, con varios puntos para parquear y puestos de comida típica. Ya está en el plan del jueves 15.",
+   tip: "📸 Llegar 5:00–5:15 PM para el cambio de golden hour a blue hour. Ideal para timelapse de la ciudad encendiéndose."},
+  {rank: "#2", name: "Mirador El Picacho · Cristo Rey", zone: "Noroccidente",
+   img: "images/cristo-rey.jpg",
+   desc: "La estatua de Cristo Rey en lo alto del cerro, con una de las vistas panorámicas más emblemáticas de la ciudad. Los más aventureros suben 300 escalones hasta la estatua (opcional).",
+   tip: "📸 Estatua + valle en un mismo encuadre. Ir de día o al atardecer, siempre en grupo."},
+  {rank: "#3", name: "Cerro El Volador", zone: "Robledo · noroccidente", mi: "4.9 mi del hotel",
+   img: "images/cerro-volador.jpg",
+   desc: "Cerro tutelar y parque natural dentro de la ciudad: senderos ecológicos, verde y miradores tranquilos hacia el centro y el occidente.",
+   tip: "📸 Atardecer con la ciudad al fondo. Llevar capa liviana y calzado cómodo."}
+];
+
 /* ---------- NAV ---------- */
 (function(){
   const nav = document.getElementById("daynav");
   let html = '<a href="#clima">🌡️ Clima</a>';
   DAYS.forEach(d => { html += '<a href="#' + d.id + '">' + d.dow + " " + d.date + "</a>"; });
-  html += '<a href="#restaurantes">🍽️ Restaurantes</a><a href="#eventos">🎭 Eventos</a>';
+  html += '<a href="#restaurantes">🍽️ Restaurantes</a><a href="#miradores">🌇 Miradores</a><a href="#eventos">🎭 Eventos</a>';
   nav.innerHTML = html;
 })();
 
@@ -396,10 +445,12 @@ const RESTOS = [
 (function(){
   const box = document.getElementById("days");
   box.innerHTML = DAYS.map((d, i) => {
-    const tl = d.stops.map(s =>
-      '<div class="tl-item"><div class="tl-time">' + s.time + '</div><h4>' + s.name + '</h4><p>' + s.desc + '</p>' +
-      (s.mi ? '<span class="mi">📍 ' + s.mi + ' mi del hotel</span>' : "") + "</div>"
-    ).join("");
+    const tl = d.stops.map(s => {
+      const ph = (s.photos || []).map(p => '<img class="stop-photo" src="' + p + '" alt="' + s.name + '" loading="lazy">').join("");
+      const phw = ph ? '<div class="stop-photos' + (s.photos.length > 1 ? " two" : "") + '">' + ph + "</div>" : "";
+      return '<div class="tl-item"><div class="tl-time">' + s.time + "</div><h4>" + s.name + "</h4>" + phw + "<p>" + s.desc + "</p>" +
+        (s.mi ? '<span class="mi">📍 ' + s.mi + ' mi del hotel</span>' : "") + "</div>";
+    }).join("");
     let night;
     if (d.night.none) {
       night = '<div class="night"><div class="lbl">🌙 Por la noche</div><p>' + d.night.text + "</p></div>";
@@ -429,6 +480,16 @@ const RESTOS = [
     '<div class="resto' + (r.star ? " top" : "") + '"><h4><span class="rank' + (r.star ? " star" : "") + '">' + r.rank + "</span> " + r.name + "</h4>" +
     '<div class="zone">' + r.zone + " · " + r.addr + "</div><p>" + r.profile + "</p>" +
     '<div class="rate">⭐ ' + r.rating + '</div><div class="night-use">→ ' + r.night + "</div></div>"
+  ).join("");
+})();
+
+/* ---------- MIRADORES ---------- */
+(function(){
+  const g = document.getElementById("mirgrid");
+  g.innerHTML = MIRADORES.map(m =>
+    '<div class="mir-card"><img src="' + m.img + '" alt="' + m.name + '" loading="lazy">' +
+    '<div class="mir-body"><h4><span class="rank">' + m.rank + "</span> " + m.name + "</h4>" +
+    '<div class="zone">' + m.zone + (m.mi ? " · 📍 " + m.mi : "") + "</div><p>" + m.desc + '</p><div class="mir-tip">' + m.tip + "</div></div></div>"
   ).join("");
 })();
 
