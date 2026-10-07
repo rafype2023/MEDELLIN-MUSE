@@ -184,7 +184,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;
   <div class="wrap">
     <div class="hero-kicker">Viaje de aniversario</div>
     <h1>Medellín <span class="accent">13–20 · oct 2026</span></h1>
-    <p class="sub">Una semana para disfrutar sin prisa. Guía día por día para <b>Rafy &amp; Vanessa</b>: un mapa por día con cada lugar ubicado respecto al hotel, clima histórico, y cada noche el restaurante que toca según su ranking.</p>
+    <p class="sub">Una semana para disfrutar sin prisa. Guía día por día para <b>Rafy &amp; Vanessa</b>: un mapa por día con cada lugar ubicado respecto al hotel, pronóstico del clima, y cada noche el restaurante que toca según su ranking.</p>
     <div class="chips">
       <span class="chip">🏨 <b>Hampton by Hilton</b>&nbsp;Medellín · El Poblado</span>
       <span class="chip">📍 Calle 6 Sur #42-14</span>
@@ -199,9 +199,9 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;
 <section class="block" id="clima">
   <div class="wrap">
     <div class="sec-head"><span class="num">1</span><h2>Clima día por día</h2></div>
-    <p class="sec-sub">Promedios históricos de octubre en Medellín (la “ciudad de la eterna primavera”). Octubre es el mes más lluvioso: lluvias casi siempre en la tarde, mañanas aprovechables.</p>
+    <p class="sec-sub">Pronóstico actualizado el 7 de octubre de 2026 para las fechas del viaje. Octubre es el mes más lluvioso de Medellín: lluvias casi siempre en la tarde, mañanas aprovechables.</p>
     <div class="wx-grid" id="wxgrid"></div>
-    <div class="wx-note">📊 Datos basados en promedios históricos de octubre (máx ~72–77 °F / mín ~48–54 °F, ~21 días de lluvia al mes, humedad ~88%). No es pronóstico: <b>vuelvan a revisar el pronóstico 7 días antes del viaje</b>, sobre todo para los miradores al atardecer.</div>
+    <div class="wx-note">🔮 Pronóstico del 7 de octubre de 2026 (a 6–13 días del viaje; puede variar). Se revisará de nuevo el 11 de octubre. Octubre es el mes más lluvioso de Medellín (~21 días de lluvia al mes, humedad ~88%): la lluvia suele caer en la tarde, así que las mañanas se aprovechan — sobre todo para los miradores al atardecer.</div>
   </div>
 </section>
 
@@ -286,7 +286,7 @@ const HOTEL = {lat: 6.2005, lon: -75.57333, name: "Hampton by Hilton Medellín",
 const DAYS = [
 {
   id: "d13", dow: "MAR", date: "13 oct", title: "Llegada y adaptación", rhythm: "Ritmo ligero",
-  hi: 73, lo: 54, rain: 65, wxnote: "Llovizna ligera en la tarde", sunset: "5:48 PM",
+  hi: 63, lo: 55, rain: 60, wxnote: "Lluvia ligera intermitente", sunset: "5:48 PM",
   stops: [
     {time: "Tarde", name: "Check-in en el Hampton", lat: 6.2005, lon: -75.57333, mi: "0.0",
      desc: "Registro, almuerzo ligero y descanso del vuelo. No comprometer boletos si el vuelo llega tarde."},
@@ -298,7 +298,7 @@ const DAYS = [
 },
 {
   id: "d14", dow: "MIÉ", date: "14 oct", title: "Botero y noche en Provenza", rhythm: "Ritmo moderado",
-  hi: 77, lo: 50, rain: 70, wxnote: "Lluvia con tormenta posible en la tarde", sunset: "5:48 PM",
+  hi: 64, lo: 52, rain: 60, wxnote: "Posible lluvia intermitente", sunset: "5:48 PM",
   stops: [
     {time: "9:30 AM", name: "Museo de Antioquia + Plaza Botero", lat: 6.25241, lon: -75.56897, mi: "3.6",
      photos: ["images/plaza-botero.jpg"],
@@ -315,7 +315,7 @@ const DAYS = [
 },
 {
   id: "d15", dow: "JUE", date: "15 oct", title: "El Castillo y atardecer en Las Palmas", rhythm: "Ritmo ligero",
-  hi: 73, lo: 50, rain: 70, wxnote: "Chubascos ligeros en la tarde", sunset: "5:47 PM",
+  hi: 72, lo: 50, rain: 70, wxnote: "Chubascos ligeros en la tarde", sunset: "5:47 PM",
   stops: [
     {time: "10:00 AM", name: "Museo El Castillo", lat: 6.19027, lon: -75.56954, mi: "0.8",
      photos: ["images/museo-castillo.jpg"],
@@ -331,7 +331,7 @@ const DAYS = [
 },
 {
   id: "d16", dow: "VIE", date: "16 oct", title: "Arte y aniversario 💛", rhythm: "Ritmo ligero · día especial",
-  hi: 73, lo: 50, rain: 65, wxnote: "Chubascos ligeros", sunset: "5:47 PM",
+  hi: 72, lo: 50, rain: 70, wxnote: "Chubascos ligeros en la tarde", sunset: "5:47 PM",
   stops: [
     {time: "11:00 AM", name: "MAMM · Museo de Arte Moderno", lat: 6.2237, lon: -75.57445, mi: "1.6",
      photos: ["images/mamm.jpg"],
@@ -344,7 +344,7 @@ const DAYS = [
 },
 {
   id: "d17", dow: "SÁB", date: "17 oct", title: "Comuna 13", rhythm: "Ritmo moderado",
-  hi: 72, lo: 50, rain: 70, wxnote: "Chubascos ligeros", sunset: "5:46 PM",
+  hi: 66, lo: 54, rain: 70, wxnote: "Chubascos ligeros", sunset: "5:46 PM",
   stops: [
     {time: "8:30 AM", name: "Comuna 13 · recorrido privado", lat: 6.24837, lon: -75.62173, mi: "4.7",
      photos: ["images/comuna-13.jpg"],
@@ -358,14 +358,14 @@ const DAYS = [
 },
 {
   id: "d18", dow: "DOM", date: "18 oct", title: "Las mejores atracciones", rhythm: "Ritmo moderado",
-  hi: 73, lo: 50, rain: 60, wxnote: "Chubascos ligeros", sunset: "5:46 PM",
+  hi: 64, lo: 54, rain: 70, wxnote: "Chubascos ligeros", sunset: "5:46 PM",
   stops: [
     {time: "9:30 AM", name: "Pueblito Paisa · Cerro Nutibara", lat: 6.23529, lon: -75.57995, mi: "2.4",
      photos: ["images/pueblito-paisa.jpg"],
      desc: "El pueblito antioqueño en la cima + mirador 360° de la ciudad. Mañana de fotos."},
     {time: "2:00 PM", name: "Jardín Botánico", lat: 6.27095, lon: -75.56452, mi: "4.9",
      photos: ["images/orquideorama.jpg"],
-     desc: "Orquideorama y senderos tranquilos. Entrada general suele ser gratuita. Alternativa: <b>Ponte Salsa en Familia</b> 3:00–5:00 PM en el Claustro Comfama (gratis con inscripción previa)."}
+     desc: "Orquideorama y senderos tranquilos. Entrada general suele ser gratuita. <b>Mercado Verde</b> este domingo 9:00 AM–4:00 PM en el Árbol Abuelo: puestos de productos orgánicos y artesanías — llegan a tiempo para verlo. Alternativa: <b>Ponte Salsa en Familia</b> 3:00–5:00 PM en el Claustro Comfama (gratis con inscripción previa)."}
   ],
   night: {rank: "#4", name: "Sambombi Bistro Local", zone: "Provenza", profile: "Bistró creativo / producto local",
     rating: "4.5 · 600+ reseñas", addr: "Cra. 35 #7-10", pin: {lat: 6.20628, lon: -75.56536, mi: "0.7"},
@@ -373,7 +373,7 @@ const DAYS = [
 },
 {
   id: "d19", dow: "LUN", date: "19 oct", title: "Guatapé sin prisa", rhythm: "Día largo",
-  hi: 75, lo: 48, rain: 65, wxnote: "Tormenta posible en la tarde", sunset: "5:45 PM",
+  hi: 68, lo: 52, rain: 65, wxnote: "Chubascos ligeros", sunset: "5:45 PM",
   stops: [
     {time: "7:00 AM", name: "Guatapé · día completo", lat: 6.23371, lon: -75.16008, mi: "28.5",
      photos: ["images/guatape.jpg", "images/piedra-penol.jpg"],
@@ -387,7 +387,7 @@ const DAYS = [
 },
 {
   id: "d20", dow: "MAR", date: "20 oct", title: "Despedida sin carreras", rhythm: "Ritmo ligero",
-  hi: 70, lo: 50, rain: 65, wxnote: "Chubascos ligeros", sunset: "5:45 PM",
+  hi: 73, lo: 52, rain: 65, wxnote: "Chubascos ligeros; el día más cálido", sunset: "5:45 PM",
   stops: [
     {time: "Mañana", name: "Desayuno + check-out", lat: 6.2005, lon: -75.57333, mi: "0.0",
      desc: "Compras de última hora en Santa Fe si el horario del vuelo lo permite. No reservar atracciones con boleto este día."},
